@@ -5,53 +5,73 @@ Script Python sederhana untuk melakukan backup database MySQL atau MariaDB secar
 ---
 
 ## 🚀 Fitur Utama
-- **Backup Aman**: Menggunakan `mysqldump`.
-- **Kompresi**: Format `.sql.gz` untuk menghemat ruang Drive.
-- **Upload Google Drive**: Otomatis masuk ke folder pilihan Anda.
-- **Notifikasi Telegram**: Pesan real-time jika backup berhasil atau gagal.
-- **Pembersihan Otomatis**: Menghapus file backup lokal setelah berhasil diunggah.
+- **Backup Aman**: Menggunakan `mysqldump` dengan dukungan path kustom.
+- **Kompresi Otomatis**: Format `.sql.gz` untuk efisiensi ruang GDrive.
+- **Upload Google Drive**: Folder penyimpanan dapat dikonfigurasi via ID.
+- **Notifikasi Telegram**: Pesan real-time sukses/gagal di Telegram.
+- **Pembersihan Otomatis**: File lokal dihapus setelah berhasil diunggah.
+- **Cron Job Ready**: Kinerja stabil saat dijalankan secara otomatis di Linux.
 
 ---
 
-## 📋 Prasyarat
-- Python 3.x
-- MySQL/MariaDB Server
-- Akun Google (untuk Google Drive API)
-- Bot Telegram (lewat @BotFather)
+## 📋 Konfigurasi Detail (`.env`)
+Copy file `.env.example` menjadi `.env` dan lengkapi nilai-nilainya:
+
+| Variabel | Deskripsi | Contoh |
+| :--- | :--- | :--- |
+| `DB_USER` | Username database MySQL | `root` |
+| `DB_PASSWORD` | Password database MySQL | `p@ssword123` |
+| `DB_NAME` | Nama database yang ingin di-backup | `my_database` |
+| `BACKUP_DIR` | Folder penampung backup lokal (sementara) | `backup` |
+| `DRIVE_FOLDER_ID` | ID folder di Google Drive | `10RnPbSvwjqjkQ...` |
+| `TELEGRAM_BOT_TOKEN` | Token dari @BotFather | `8284753068:AAGH...` |
+| `TELEGRAM_CHAT_ID` | ID chat profil/grup di Telegram | `8451185743` |
+| `MYSQLDUMP_PATH` | Path lengkap ke file `mysqldump` | `C:\xampp\mysql\bin\mysqldump.exe` |
 
 ---
 
-## 🛠️ Cara Instalasi
+## 🛠️ Instalasi & Setup
 
-1.  **Clone Repository**:
+1.  **Clone Repo**:
     ```bash
-    git clone https://github.com/username/repo-name.git
-    cd repo-name
+    git clone https://github.com/fahmiffa/backup_tele_grdive.git
+    cd backup_tele_grdive
     ```
 
-2.  **Buat Virtual Environment** (Opsional tapi disarankan):
+2.  **Virtual Environment & Install**:
     ```bash
     python -m venv venv
-    venv\Scripts\activate
-    ```
-
-3.  **Install Dependensi**:
-    ```bash
+    source venv/bin/activate  # (Di Windows: venv\Scripts\activate)
     pip install -r requirements.txt
     ```
 
-4.  **Konfigurasi `.env`**:
-    Copy file `.env.example` menjadi `.env` dan isi sesuai kredensial Anda.
-
-5.  **Setup Google Drive API**:
-    - Siapkan file `credentials.json` dari Google Cloud Console.
-    - Jalankan `python generate_token.py` untuk mendapatkan akses.
+3.  **Google Drive Authentication**:
+    Pastikan `credentials.json` sudah ada di folder utama, lalu jalankan:
+    ```bash
+    python generate_token.py
+    ```
+    Ikuti proses login di browser sampai muncul file `token.pickle`.
 
 ---
 
-## 🏃 Cara Menjalankan
+## ⏰ Otomatisasi (Cron Job di Linux)
 
-Lakukan backup manual dengan perintah:
+Untuk menjalankan backup secara otomatis setiap hari jam 12 malam di Linux, ikuti langkah ini:
+
+1.  Buka Crontab:
+    ```bash
+    crontab -e
+    ```
+
+2.  Tambahkan baris berikut di paling bawah (asumsikan folder projek ada di `/home/user/backup_tele_grdive`):
+    ```cron
+    0 0 * * * cd /home/user/backup_tele_grdive && /home/user/backup_tele_grdive/venv/bin/python3 -m app.main >> /home/user/backup_tele_grdive/backup.log 2>&1
+    ```
+
+---
+
+## 🏃 Cara Manual
+Jalankan script kapan saja dengan perintah:
 ```bash
 python -m app.main
 ```
@@ -59,4 +79,4 @@ python -m app.main
 ---
 
 ## 🛡️ Lisensi
-Distributed under the MIT License.
+Diterbitkan di bawah Lisensi MIT.
