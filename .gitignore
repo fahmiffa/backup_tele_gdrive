@@ -1,0 +1,23 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Sensitive Information (DON'T UPLOAD!)
+.env
+token.pickle
+credentials.json
+
+# Local Backup Files
+backup/
+*.sql
+*.gz
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE Settings
+.vscode/
+.idea/
